@@ -1,16 +1,12 @@
-# wordspy
+# 🧩 WordSpy 🕵️
+WordSpy is a mobile application that solves scanned word search puzzle images and solves them automatically after being given a list of words to be found. 
 
-A wordsearch puzzle scanner and solver.
+## How To Use 🔍
 
-## Getting Started
+## Technologies Used 🛠️
+As mentioned above, the mobile application was constructed with **Dart** and **Flutter**. External Flutter packages that involved image selection, image cropping, and text recognition were employed to implement the OCR scanning features.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Flutter Packages from [**pub.dev**](https://pub.dev/):
+- [image_picker](https://pub.dev/packages/image_picker)
+- [image_cropper](https://pub.dev/packages/image_cropper)
+- [google_mlkit_text_recognition](https://pub.dev/packages/google_mlkit_text_recognition)
