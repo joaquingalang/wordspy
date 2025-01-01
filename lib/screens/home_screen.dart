@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Scan a Word Search Puzzle',
+                'Scan A Word\nSearch Puzzle',
                 style: TextStyle(
                   fontFamily: 'Axis',
                   fontSize: 32,
