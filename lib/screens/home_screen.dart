@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:wordspy/utils/constants.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  ActionMode _actionMode = ActionMode.scanImage;
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +56,21 @@ class HomeScreen extends StatelessWidget {
         child: FloatingActionButton.large(
           shape: CircleBorder(),
           backgroundColor: kOrangeColor,
-          onPressed: () {},
+          onPressed: () {
+            if (_actionMode == ActionMode.scanImage) {
+              setState(() {
+                _actionMode = ActionMode.addWord;
+              });
+            } else {
+              setState(() {
+                _actionMode = ActionMode.scanImage;
+              });
+            }
+          },
           child: Icon(
-            Icons.add_a_photo_outlined,
+            (_actionMode == ActionMode.scanImage) ? Icons.add_a_photo_outlined : Icons.add,
             color: kDeepPurpleColor,
-            size: 40,
+            size: 45,
           ),
         ),
       ),

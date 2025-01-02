@@ -14,3 +14,8 @@ const TextStyle kMediumTextStyle = TextStyle(
   color: Colors.black,
   fontSize: 20,
 );
+
+enum ActionMode {
+  scanImage,
+  addWord
+}
