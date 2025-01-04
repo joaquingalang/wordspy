@@ -81,6 +81,12 @@ flutter:
     - family: Axis
       fonts:
         - asset: fonts/Axis-Extrabold.otf
+    - family: SourceSansPro
+      fonts:
+        - asset: fonts/SourceSansPro-Regular.ttf
+    - family: PacificoRegular
+      fonts:
+        - asset: fonts/Pacifico-Regular.ttf
 
   # fonts:
   #   - family: Schyler

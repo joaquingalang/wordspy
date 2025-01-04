@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wordspy/utils/constants.dart';
+import 'package:wordspy/widgets/instructions.dart';
+import 'package:wordspy/widgets/solver.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,7 +11,35 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  ActionMode _actionMode = ActionMode.scanImage;
+  bool _imageScanned = false;
+
+  List<List<String>> puzzleGrid = [
+    ['I', 'J', 'W', 'I', 'D', 'G', 'E', 'T', 'Q', 'P', 'M', 'V'],
+    ['Y', 'D', 'Y', 'P', 'B', 'C', 'Q', 'F', 'Z', 'O', 'R', 'O'],
+    ['G', 'H', 'P', 'T', 'R', 'E', 'E', 'T', 'S', 'M', 'N', 'R'],
+    ['F', 'A', 'O', 'E', 'F', 'L', 'U', 'T', 'T', 'E', 'R', 'I'],
+    ['D', 'A', 'R', 'T', 'I', 'B', 'V', 'U', 'Y', 'V', 'W', 'Y'],
+    ['B', 'X', 'I', 'R', 'X', 'L', 'A', 'Y', 'O', 'U', 'T', 'I'],
+    ['U', 'Y', 'E', 'E', 'X', 'X', 'X', 'O', 'S', 'B', 'P', 'L'],
+    ['I', 'A', 'H', 'L', 'N', 'A', 'B', 'Q', 'T', 'H', 'Z', 'K'],
+    ['L', 'F', 'Y', 'O', 'J', 'A', 'Z', 'F', 'A', 'T', 'Q', 'V'],
+    ['D', 'F', 'E', 'A', 'F', 'Y', 'B', 'I', 'T', 'V', 'X', 'W'],
+    ['B', 'B', 'U', 'D', 'Z', 'H', 'K', 'G', 'E', 'R', 'C', 'D'],
+    ['J', 'J', 'B', 'Z', 'Z', 'T', 'H', 'R', 'C', 'Z', 'O', 'S'],
+  ];
+
+  List<String> wordList = [
+    'FLUTTER',
+    'DART',
+    'WIDGET',
+    'STATE',
+    'BUILD',
+    'TREE',
+    'APP',
+    'LAYOUT',
+    'HOT',
+    'RELOAD'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -26,27 +56,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Scan A Word\nSearch Puzzle',
-                style: TextStyle(
-                  fontFamily: 'Axis',
-                  fontSize: 32,
-                  color: Colors.black12,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Icon(
-                Icons.arrow_downward,
-                color: Colors.black12,
-                size: 70,
-              ),
-            ],
-          ),
-        ),
+        child: (_imageScanned)
+            ? Solver(
+                puzzleGrid: puzzleGrid,
+                wordList: wordList,
+              )
+            : InstructionBody(),
       ),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
@@ -57,18 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
           shape: CircleBorder(),
           backgroundColor: kOrangeColor,
           onPressed: () {
-            if (_actionMode == ActionMode.scanImage) {
-              setState(() {
-                _actionMode = ActionMode.addWord;
-              });
-            } else {
-              setState(() {
-                _actionMode = ActionMode.scanImage;
-              });
-            }
+            setState(() {
+              _imageScanned = !_imageScanned;
+            });
           },
           child: Icon(
-            (_actionMode == ActionMode.scanImage) ? Icons.add_a_photo_outlined : Icons.add,
+            (_imageScanned)
+                ? Icons.add
+                : Icons.add_a_photo_outlined,
             color: kDeepPurpleColor,
             size: 45,
           ),
