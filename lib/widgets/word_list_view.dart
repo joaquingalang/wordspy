@@ -8,7 +8,7 @@ class WordListView extends StatelessWidget {
   final List<String> words;
 
   List<Widget> buildWordListView() {
-    List<Widget> wordListView = [];
+    List<Widget> wordListView = [SizedBox(height: 5)];
     List<Widget> rowContent = [];
     int colorIndex = 0;
     for (int i = 0; i < words.length; i++) {

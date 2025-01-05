@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:wordspy/utils/constants.dart';
-import 'package:wordspy/widgets/instructions.dart';
 import 'package:wordspy/widgets/solver.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class SolverScreen extends StatefulWidget {
+  const SolverScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<SolverScreen> createState() => _SolverScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  bool _imageScanned = false;
+class _SolverScreenState extends State<SolverScreen> {
 
   List<List<String>> puzzleGrid = [
     ['I', 'J', 'W', 'I', 'D', 'G', 'E', 'T', 'Q', 'P', 'M', 'V'],
@@ -56,12 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: SafeArea(
-        child: (_imageScanned)
-            ? Solver(
-                puzzleGrid: puzzleGrid,
-                wordList: wordList,
-              )
-            : InstructionBody(),
+        child: Solver(
+          puzzleGrid: puzzleGrid,
+          wordList: wordList,
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
@@ -71,15 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: FloatingActionButton.large(
           shape: CircleBorder(),
           backgroundColor: kOrangeColor,
-          onPressed: () {
-            setState(() {
-              _imageScanned = !_imageScanned;
-            });
-          },
+          onPressed: () {},
           child: Icon(
-            (_imageScanned)
-                ? Icons.add
-                : Icons.add_a_photo_outlined,
+            Icons.add_a_photo_outlined,
             color: kDeepPurpleColor,
             size: 45,
           ),

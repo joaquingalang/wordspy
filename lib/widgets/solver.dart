@@ -22,9 +22,6 @@ class _SolverState extends State<Solver> {
   late List<List<Color>> _colorGrid;
   late List _letterList;
   late List _colorList;
-  late List _wordColorList;
-
-  // TODO: Create puzzle text builder
 
   List<List<Color>> buildColorGrid() {
     List<Color> row = [];
@@ -72,6 +69,19 @@ class _SolverState extends State<Solver> {
     return convertedList;
   }
 
+  void solveWordSearchPuzzle() {
+    for (String word in widget.wordList) {
+      int letterIndex = 0;
+      for (int row = 0; row < _gridDimensions; row++) {
+        for (int col = 0; col < _gridDimensions; col++) {
+          if (widget.puzzleGrid[row][col] == word[letterIndex]) {
+            print('${widget.puzzleGrid[row][col]} = ${word[letterIndex]}');
+          }
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     _gridDimensions = widget.puzzleGrid.length;
@@ -79,7 +89,7 @@ class _SolverState extends State<Solver> {
     _colorGrid = buildColorGrid();
     _letterList = gridToList(widget.puzzleGrid);
     _colorList = gridToList(_colorGrid);
-    _wordColorList = buildWordColorList();
+    solveWordSearchPuzzle();
     super.initState();
   }
 
@@ -120,7 +130,7 @@ class _SolverState extends State<Solver> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top: 15, bottom: 50.0),
+              padding: const EdgeInsets.only(top: 15),
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(

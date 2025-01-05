@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wordspy/utils/constants.dart';
-import 'package:wordspy/screens/home_screen.dart';
+import 'package:wordspy/screens/solver_screen.dart';
+import 'package:wordspy/screens/instruction_screen.dart';
 
 void main() {
   runApp(App());
@@ -12,7 +13,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
+      home: SolverScreen(),
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: kCreamColor,
         appBarTheme: AppBarTheme(
