@@ -24,35 +24,39 @@ class _SolverState extends State<Solver> {
   late List _colorList;
 
   List<List<Color>> buildColorGrid() {
-    List<Color> row = [];
-    for (int i = 0; i < _gridDimensions; i++) {
-      row.add(kDarkBrownColor);
-    }
     List<List<Color>> colorGrid = [];
     for (int i = 0; i < _gridDimensions; i++) {
+      List<Color> row = [];
+      for (int i = 0; i < _gridDimensions; i++) {
+        row.add(kDarkCreamColor);
+      }
       colorGrid.add(row);
     }
     return colorGrid;
+  }
+
+  Color getColorByIndex(int colorIndex) {
+    switch (colorIndex) {
+      case 0:
+        return kTealColor;
+      case 1:
+        return kRedColor;
+      case 2:
+        return kYellowColor;
+      case 3:
+        return kOrangeColor;
+      case 4:
+        return kDeepPurpleColor;
+    }
+    return Colors.transparent;
   }
 
   List<Color> buildWordColorList() {
     List<Color> wordColorList = [];
     int colorIndex = 0;
     for (int i = 0; i < _wordCount; i++) {
-      switch (colorIndex) {
-        case 0:
-          wordColorList.add(kTealColor);
-          break;
-        case 1:
-          wordColorList.add(kRedColor);
-          break;
-        case 2:
-          wordColorList.add(kYellowColor);
-          break;
-        case 3:
-          wordColorList.add(kOrangeColor);
-          break;
-      }
+      Color color = getColorByIndex(colorIndex);
+      wordColorList.add(color);
       if (colorIndex > 3) colorIndex = 0;
     }
     return wordColorList;
@@ -69,15 +73,240 @@ class _SolverState extends State<Solver> {
     return convertedList;
   }
 
-  void solveWordSearchPuzzle() {
-    for (String word in widget.wordList) {
-      int letterIndex = 0;
-      for (int row = 0; row < _gridDimensions; row++) {
-        for (int col = 0; col < _gridDimensions; col++) {
-          if (widget.puzzleGrid[row][col] == word[letterIndex]) {
-            print('${widget.puzzleGrid[row][col]} = ${word[letterIndex]}');
+  List<Direction> getValidDirections(String word, List<int> position) {
+    int wordIndexLength = word.length - 1;
+    int row = position[0];
+    int col = position[1];
+    int borderIndex = _gridDimensions - 1;
+    bool top = (row - wordIndexLength < 0) ? false : true;
+    bool left = (col - wordIndexLength < 0) ? false : true;
+    bool bottom = (row + wordIndexLength > borderIndex) ? false : true;
+    bool right = (col + wordIndexLength > borderIndex) ? false : true;
+
+    List<Direction> validDrections = [];
+
+    if (top) {
+      validDrections.add(Direction.top);
+    }
+    if (left) {
+      validDrections.add(Direction.left);
+    }
+    if (right) {
+      validDrections.add(Direction.right);
+    }
+    if (bottom) {
+      validDrections.add(Direction.bottom);
+    }
+    if (top && left) {
+      validDrections.add(Direction.topLeft);
+    }
+    if (top && right) {
+      validDrections.add(Direction.topRight);
+    }
+    if (bottom && left) {
+      validDrections.add(Direction.bottomLeft);
+    }
+    if (bottom && right) {
+      validDrections.add(Direction.bottomRight);
+    }
+
+    return validDrections;
+  }
+
+  List<List<int>> checkWordMatch(String word, List<int> position, Direction direction) {
+    int wordIndexLength = word.length - 1;
+    int startRow = position[0];
+    int startCol = position[1];
+    List<List<int>> indexList = [];
+    int wordIndex;
+
+    if (direction == Direction.top) {
+      indexList = [];
+      wordIndex = 0;
+      for (int row = startRow; row >= 0; row--) {
+        if (widget.puzzleGrid[row][startCol] == word[wordIndex]) {
+          indexList.add([row, startCol]);
+
+          if (wordIndex == wordIndexLength) {
+            return indexList;
+          }
+
+          wordIndex++;
+        } else {
+          break;
+        }
+      }
+    }
+
+    if (direction == Direction.bottom) {
+      indexList = [];
+      wordIndex = 0;
+      for (int row = startRow; row < _gridDimensions; row++) {
+        if (widget.puzzleGrid[row][startCol] == word[wordIndex]) {
+          indexList.add([row, startCol]);
+
+          if (wordIndex == wordIndexLength) {
+            return indexList;
+          }
+
+          wordIndex++;
+        } else {
+          break;
+        }
+      }
+    }
+
+    if (direction == Direction.left) {
+      indexList = [];
+      wordIndex = 0;
+      for (int col = startCol; col >= 0; col--) {
+        if (widget.puzzleGrid[startRow][col] == word[wordIndex]) {
+          indexList.add([startRow, col]);
+
+          if (wordIndex == wordIndexLength) {
+            return indexList;
+          }
+
+          wordIndex++;
+        } else {
+          break;
+        }
+      }
+    }
+
+    if (direction == Direction.right) {
+      indexList = [];
+      wordIndex = 0;
+      for (int col = startCol; col < _gridDimensions; col++) {
+        if (widget.puzzleGrid[startRow][col] == word[wordIndex]) {
+          indexList.add([startRow, col]);
+
+          if (wordIndex == wordIndexLength) {
+            return indexList;
+          }
+
+          wordIndex++;
+        } else {
+          break;
+        }
+      }
+    }
+
+    if (direction == Direction.topLeft) {
+      indexList = [];
+      wordIndex = 0;
+      for (int row = startRow; row >= 0; row--) {
+        for (int col = startCol; col >= 0; col--) {
+          if (widget.puzzleGrid[row][col] == word[wordIndex]) {
+            indexList.add([row, col]);
+
+            if (wordIndex == wordIndexLength) {
+              return indexList;
+            }
+
+            wordIndex++;
+          } else {
+            break;
           }
         }
+      }
+    }
+
+    if (direction == Direction.topRight) {
+      indexList = [];
+      wordIndex = 0;
+      for (int row = startRow; row >= 0; row--) {
+        for (int col = startCol; col < _gridDimensions; col++) {
+          if (widget.puzzleGrid[row][col] == word[wordIndex]) {
+            indexList.add([row, col]);
+
+            if (wordIndex == wordIndexLength) {
+              return indexList;
+            }
+
+            wordIndex++;
+          } else {
+            break;
+          }
+        }
+      }
+    }
+
+    if (direction == Direction.bottomLeft) {
+      indexList = [];
+      wordIndex = 0;
+      for (int row = startRow; row < _gridDimensions; row++) {
+        for (int col = startCol; col >= 0; col--) {
+          if (widget.puzzleGrid[row][col] == word[wordIndex]) {
+            indexList.add([row, col]);
+
+            if (wordIndex == wordIndexLength) {
+              return indexList;
+            }
+
+            wordIndex++;
+          } else {
+            break;
+          }
+        }
+      }
+    }
+
+    if (direction == Direction.bottomRight) {
+      indexList = [];
+      wordIndex = 0;
+      for (int row = startRow; row < _gridDimensions; row++) {
+        for (int col = startCol; col < _gridDimensions; col++) {
+          if (widget.puzzleGrid[row][col] == word[wordIndex]) {
+            indexList.add([row, col]);
+
+            if (wordIndex == wordIndexLength) {
+              return indexList;
+            }
+
+            wordIndex++;
+          } else {
+            break;
+          }
+        }
+      }
+    }
+
+    return indexList;
+  }
+
+  void solveWordSearchPuzzle() {
+    for (String word in widget.wordList) {
+      int colorIndex = 0;
+      for (int row = 0; row < _gridDimensions; row++) {
+        for (int col = 0; col < _gridDimensions; col++) {
+          print('[$row, $col] = ${widget.puzzleGrid[row][col]}');
+          if (widget.puzzleGrid[row][col] == word[0]) {
+            // TODO: Determine the match's position in the grid (edge, corner, standard)
+            // TODO: Using enums, create a list of all valid directions to check (account for word length and grid dimensions)
+            List<Direction> validDirections =
+                getValidDirections(word, [row, col]);
+
+            // TODO: Iterate through the list of all valid directions and execute the checkWordMatch function that accepts the paramters: word, x & y index, and direction to check
+            for (Direction direction in validDirections) {
+              List<List<int>> matchIndices =
+                  checkWordMatch(word, [row, col], direction);
+
+              if (matchIndices.length == word.length) {
+                for (List<int> position in matchIndices) {
+                  int row = position[0];
+                  int col = position[1];
+                  _colorGrid[row][col] = getColorByIndex(colorIndex);
+                }
+                setState(() {
+                  _colorList = gridToList(_colorGrid);
+                });
+              }
+            }
+          }
+        }
+        colorIndex++;
+        if (colorIndex > 4) colorIndex = 0;
       }
     }
   }
@@ -113,13 +342,17 @@ class _SolverState extends State<Solver> {
                 return Center(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: kDarkCreamColor,
+                      color: _colorList[index],
                       borderRadius: BorderRadius.circular(90),
                     ),
                     child: Center(
                       child: Text(
                         _letterList[index],
-                        style: TextStyle(color: _colorList[index]),
+                        style: (_colorList[index] == kDarkCreamColor)
+                            ? TextStyle(color: kDarkBrownColor)
+                            : TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),

@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+// Enums
+enum Direction {
+  top,
+  left,
+  right,
+  bottom,
+  topLeft,
+  topRight,
+  bottomLeft,
+  bottomRight,
+}
+
 // Color
 const Color kCreamColor = Color(0xFFFFFDF9);
 const Color kDarkCreamColor = Color(0xFFE8E6E1);
