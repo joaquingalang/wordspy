@@ -46,7 +46,7 @@ class _SolverState extends State<Solver> {
       case 3:
         return kOrangeColor;
       case 4:
-        return kDeepPurpleColor;
+        return kPurpleColor;
     }
     return Colors.transparent;
   }
@@ -119,6 +119,8 @@ class _SolverState extends State<Solver> {
     int startCol = position[1];
     List<List<int>> indexList = [];
     int wordIndex;
+
+    print(direction);
 
     if (direction == Direction.top) {
       indexList = [];
@@ -195,19 +197,21 @@ class _SolverState extends State<Solver> {
     if (direction == Direction.topLeft) {
       indexList = [];
       wordIndex = 0;
+      print(wordIndex);
       for (int row = startRow; row >= 0; row--) {
-        for (int col = startCol; col >= 0; col--) {
-          if (widget.puzzleGrid[row][col] == word[wordIndex]) {
-            indexList.add([row, col]);
+        int col = startCol-wordIndex;
+        if (col < 0 || col >= _gridDimensions) break;
+        print('($row, $col) : ${widget.puzzleGrid[row][col]} = ${word[wordIndex]}');
+        if (widget.puzzleGrid[row][col] == word[wordIndex]) {
+          indexList.add([row, col]);
 
-            if (wordIndex == wordIndexLength) {
-              return indexList;
-            }
-
-            wordIndex++;
-          } else {
-            break;
+          if (wordIndex == wordIndexLength) {
+            return indexList;
           }
+
+          wordIndex++;
+        } else {
+          break;
         }
       }
     }
@@ -215,19 +219,21 @@ class _SolverState extends State<Solver> {
     if (direction == Direction.topRight) {
       indexList = [];
       wordIndex = 0;
+      print(wordIndex);
       for (int row = startRow; row >= 0; row--) {
-        for (int col = startCol; col < _gridDimensions; col++) {
-          if (widget.puzzleGrid[row][col] == word[wordIndex]) {
-            indexList.add([row, col]);
+        int col = startCol+wordIndex;
+        if (col < 0 || col >= _gridDimensions) break;
+        print('($row, $col) : ${widget.puzzleGrid[row][col]} = ${word[wordIndex]}');
+        if (widget.puzzleGrid[row][col] == word[wordIndex]) {
+          indexList.add([row, col]);
 
-            if (wordIndex == wordIndexLength) {
-              return indexList;
-            }
-
-            wordIndex++;
-          } else {
-            break;
+          if (wordIndex == wordIndexLength) {
+            return indexList;
           }
+
+          wordIndex++;
+        } else {
+          break;
         }
       }
     }
@@ -235,19 +241,21 @@ class _SolverState extends State<Solver> {
     if (direction == Direction.bottomLeft) {
       indexList = [];
       wordIndex = 0;
+      print(wordIndex);
       for (int row = startRow; row < _gridDimensions; row++) {
-        for (int col = startCol; col >= 0; col--) {
-          if (widget.puzzleGrid[row][col] == word[wordIndex]) {
-            indexList.add([row, col]);
+        int col = startCol-wordIndex;
+        if (col < 0 || col >= _gridDimensions) break;
+        print('($row, $col) : ${widget.puzzleGrid[row][col]} = ${word[wordIndex]}');
+        if (widget.puzzleGrid[row][col] == word[wordIndex]) {
+          indexList.add([row, col]);
 
-            if (wordIndex == wordIndexLength) {
-              return indexList;
-            }
-
-            wordIndex++;
-          } else {
-            break;
+          if (wordIndex == wordIndexLength) {
+            return indexList;
           }
+
+          wordIndex++;
+        } else {
+          break;
         }
       }
     }
@@ -255,19 +263,21 @@ class _SolverState extends State<Solver> {
     if (direction == Direction.bottomRight) {
       indexList = [];
       wordIndex = 0;
+      print(wordIndex);
       for (int row = startRow; row < _gridDimensions; row++) {
-        for (int col = startCol; col < _gridDimensions; col++) {
-          if (widget.puzzleGrid[row][col] == word[wordIndex]) {
-            indexList.add([row, col]);
+        int col = startCol+wordIndex;
+        if (col < 0 || col >= _gridDimensions) break;
+        print('($row, $col) : ${widget.puzzleGrid[row][col]} = ${word[wordIndex]}');
+        if (widget.puzzleGrid[row][col] == word[wordIndex]) {
+          indexList.add([row, col]);
 
-            if (wordIndex == wordIndexLength) {
-              return indexList;
-            }
-
-            wordIndex++;
-          } else {
-            break;
+          if (wordIndex == wordIndexLength) {
+            return indexList;
           }
+
+          wordIndex++;
+        } else {
+          break;
         }
       }
     }
@@ -276,11 +286,11 @@ class _SolverState extends State<Solver> {
   }
 
   void solveWordSearchPuzzle() {
+    int colorIndex = 0;
     for (String word in widget.wordList) {
-      int colorIndex = 0;
       for (int row = 0; row < _gridDimensions; row++) {
         for (int col = 0; col < _gridDimensions; col++) {
-          print('[$row, $col] = ${widget.puzzleGrid[row][col]}');
+          // print('[$row, $col] = ${widget.puzzleGrid[row][col]}');
           if (widget.puzzleGrid[row][col] == word[0]) {
             // TODO: Determine the match's position in the grid (edge, corner, standard)
             // TODO: Using enums, create a list of all valid directions to check (account for word length and grid dimensions)
@@ -289,9 +299,11 @@ class _SolverState extends State<Solver> {
 
             // TODO: Iterate through the list of all valid directions and execute the checkWordMatch function that accepts the paramters: word, x & y index, and direction to check
             for (Direction direction in validDirections) {
+              print('-----------');
               List<List<int>> matchIndices =
                   checkWordMatch(word, [row, col], direction);
 
+              // print(matchIndices);
               if (matchIndices.length == word.length) {
                 for (List<int> position in matchIndices) {
                   int row = position[0];
@@ -301,13 +313,14 @@ class _SolverState extends State<Solver> {
                 setState(() {
                   _colorList = gridToList(_colorGrid);
                 });
+                break;
               }
             }
           }
         }
-        colorIndex++;
-        if (colorIndex > 4) colorIndex = 0;
       }
+      colorIndex++;
+      if (colorIndex > 4) colorIndex = 0;
     }
   }
 
