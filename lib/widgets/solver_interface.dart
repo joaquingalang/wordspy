@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wordspy/utils/constants.dart';
 import 'package:wordspy/widgets/word_list_view.dart';
 
-class Solver extends StatefulWidget {
-  const Solver({
+class SolverInterface extends StatefulWidget {
+  const SolverInterface({
     super.key,
     required this.puzzleGrid,
     required this.wordList,
@@ -13,10 +13,10 @@ class Solver extends StatefulWidget {
   final List<String> wordList;
 
   @override
-  State<Solver> createState() => _SolverState();
+  State<SolverInterface> createState() => _SolverInterfaceState();
 }
 
-class _SolverState extends State<Solver> {
+class _SolverInterfaceState extends State<SolverInterface> {
   late final int _gridDimensions;
   late final int _wordCount;
   late List<List<Color>> _colorGrid;
@@ -334,7 +334,7 @@ class _SolverState extends State<Solver> {
   }
 
   @override
-  void didUpdateWidget(covariant Solver oldWidget) {
+  void didUpdateWidget(covariant SolverInterface oldWidget) {
     solveWordSearchPuzzle();
     super.didUpdateWidget(oldWidget);
   }
