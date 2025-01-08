@@ -120,8 +120,6 @@ class _SolverState extends State<Solver> {
     List<List<int>> indexList = [];
     int wordIndex;
 
-    print(direction);
-
     if (direction == Direction.top) {
       indexList = [];
       wordIndex = 0;
@@ -132,7 +130,6 @@ class _SolverState extends State<Solver> {
           if (wordIndex == wordIndexLength) {
             return indexList;
           }
-
           wordIndex++;
         } else {
           break;
@@ -197,11 +194,9 @@ class _SolverState extends State<Solver> {
     if (direction == Direction.topLeft) {
       indexList = [];
       wordIndex = 0;
-      print(wordIndex);
       for (int row = startRow; row >= 0; row--) {
         int col = startCol-wordIndex;
         if (col < 0 || col >= _gridDimensions) break;
-        print('($row, $col) : ${widget.puzzleGrid[row][col]} = ${word[wordIndex]}');
         if (widget.puzzleGrid[row][col] == word[wordIndex]) {
           indexList.add([row, col]);
 
@@ -219,11 +214,9 @@ class _SolverState extends State<Solver> {
     if (direction == Direction.topRight) {
       indexList = [];
       wordIndex = 0;
-      print(wordIndex);
       for (int row = startRow; row >= 0; row--) {
         int col = startCol+wordIndex;
         if (col < 0 || col >= _gridDimensions) break;
-        print('($row, $col) : ${widget.puzzleGrid[row][col]} = ${word[wordIndex]}');
         if (widget.puzzleGrid[row][col] == word[wordIndex]) {
           indexList.add([row, col]);
 
@@ -241,11 +234,9 @@ class _SolverState extends State<Solver> {
     if (direction == Direction.bottomLeft) {
       indexList = [];
       wordIndex = 0;
-      print(wordIndex);
       for (int row = startRow; row < _gridDimensions; row++) {
         int col = startCol-wordIndex;
         if (col < 0 || col >= _gridDimensions) break;
-        print('($row, $col) : ${widget.puzzleGrid[row][col]} = ${word[wordIndex]}');
         if (widget.puzzleGrid[row][col] == word[wordIndex]) {
           indexList.add([row, col]);
 
@@ -263,11 +254,9 @@ class _SolverState extends State<Solver> {
     if (direction == Direction.bottomRight) {
       indexList = [];
       wordIndex = 0;
-      print(wordIndex);
       for (int row = startRow; row < _gridDimensions; row++) {
         int col = startCol+wordIndex;
         if (col < 0 || col >= _gridDimensions) break;
-        print('($row, $col) : ${widget.puzzleGrid[row][col]} = ${word[wordIndex]}');
         if (widget.puzzleGrid[row][col] == word[wordIndex]) {
           indexList.add([row, col]);
 
@@ -290,7 +279,6 @@ class _SolverState extends State<Solver> {
     for (String word in widget.wordList) {
       for (int row = 0; row < _gridDimensions; row++) {
         for (int col = 0; col < _gridDimensions; col++) {
-          // print('[$row, $col] = ${widget.puzzleGrid[row][col]}');
           if (widget.puzzleGrid[row][col] == word[0]) {
             // TODO: Determine the match's position in the grid (edge, corner, standard)
             // TODO: Using enums, create a list of all valid directions to check (account for word length and grid dimensions)
@@ -299,11 +287,9 @@ class _SolverState extends State<Solver> {
 
             // TODO: Iterate through the list of all valid directions and execute the checkWordMatch function that accepts the paramters: word, x & y index, and direction to check
             for (Direction direction in validDirections) {
-              print('-----------');
               List<List<int>> matchIndices =
                   checkWordMatch(word, [row, col], direction);
 
-              // print(matchIndices);
               if (matchIndices.length == word.length) {
                 for (List<int> position in matchIndices) {
                   int row = position[0];
@@ -324,15 +310,33 @@ class _SolverState extends State<Solver> {
     }
   }
 
+  void removeWord(int index) {
+    setState(() {
+      widget.wordList.removeAt(index);
+    });
+    refreshColorGrid();
+    solveWordSearchPuzzle();
+  }
+
+  void refreshColorGrid() {
+    _colorGrid = buildColorGrid();
+    _colorList = gridToList(_colorGrid);
+  }
+
   @override
   void initState() {
     _gridDimensions = widget.puzzleGrid.length;
     _wordCount = widget.wordList.length;
-    _colorGrid = buildColorGrid();
     _letterList = gridToList(widget.puzzleGrid);
-    _colorList = gridToList(_colorGrid);
+    refreshColorGrid();
     solveWordSearchPuzzle();
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant Solver oldWidget) {
+    solveWordSearchPuzzle();
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -401,7 +405,7 @@ class _SolverState extends State<Solver> {
                       thickness: 2,
                     ),
                     Expanded(
-                      child: WordListView(words: widget.wordList),
+                      child: WordListView(words: widget.wordList, onLongPress: removeWord),
                     ),
                   ],
                 ),

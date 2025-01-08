@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wordspy/utils/constants.dart';
 import 'package:wordspy/widgets/solver.dart';
+import 'package:wordspy/widgets/add_word_sheet.dart';
 
 class SolverScreen extends StatefulWidget {
   const SolverScreen({super.key});
@@ -10,7 +11,6 @@ class SolverScreen extends StatefulWidget {
 }
 
 class _SolverScreenState extends State<SolverScreen> {
-
   List<List<String>> puzzleGrid = [
     ['I', 'J', 'W', 'I', 'D', 'G', 'E', 'T', 'Q', 'P', 'M', 'V'],
     ['Y', 'D', 'Y', 'P', 'B', 'C', 'Q', 'F', 'Z', 'O', 'R', 'O'],
@@ -39,11 +39,26 @@ class _SolverScreenState extends State<SolverScreen> {
     'RELOAD'
   ];
 
+  void addNewWord(String word) {
+    setState(() {
+      wordList.add(word);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: kDeepPurpleColor,
+            size: 35,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: Text(
           'WORDSPY',
           style: TextStyle(
@@ -52,6 +67,7 @@ class _SolverScreenState extends State<SolverScreen> {
             color: kDeepPurpleColor,
           ),
         ),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: Solver(
@@ -67,9 +83,16 @@ class _SolverScreenState extends State<SolverScreen> {
         child: FloatingActionButton.large(
           shape: CircleBorder(),
           backgroundColor: kOrangeColor,
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => AddWordSheet(
+                onSubmit: addNewWord,
+              ),
+            );
+          },
           child: Icon(
-            Icons.add_a_photo_outlined,
+            Icons.add,
             color: kDeepPurpleColor,
             size: 45,
           ),

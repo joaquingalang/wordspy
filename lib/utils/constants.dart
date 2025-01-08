@@ -27,6 +27,24 @@ const Color kRedColor = Color(0xFFDE6D78);
 // Text Style
 const TextStyle kMediumTextStyle = TextStyle(
   fontFamily: 'Axis',
-  color: Colors.black,
+  color: kDeepPurpleColor,
   fontSize: 20,
+);
+
+const TextStyle kLargeTextStyle = TextStyle(
+  fontFamily: 'Axis',
+  color: kDeepPurpleColor,
+  fontSize: 28,
+);
+
+const TextStyle kWhiteMediumTextStyle = TextStyle(
+  fontFamily: 'Axis',
+  color: Colors.white,
+  fontSize: 20,
+);
+
+const TextStyle kWhiteLargeTextStyle = TextStyle(
+  fontFamily: 'Axis',
+  color: Colors.white,
+  fontSize: 28,
 );

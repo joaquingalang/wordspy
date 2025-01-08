@@ -2,21 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:wordspy/utils/constants.dart';
 import 'package:wordspy/widgets/word_tile.dart';
 
-class WordListView extends StatelessWidget {
-  const WordListView({super.key, required this.words});
+class WordListView extends StatefulWidget {
+  const WordListView({super.key, required this.words, required this.onLongPress});
 
   final List<String> words;
+  final void Function(int) onLongPress;
 
+  @override
+  State<WordListView> createState() => _WordListViewState();
+}
+
+class _WordListViewState extends State<WordListView> {
   List<Widget> buildWordListView() {
     List<Widget> wordListView = [SizedBox(height: 5)];
     List<Widget> rowContent = [];
     int colorIndex = 0;
-    for (int i = 0; i < words.length; i++) {
+    for (int i = 0; i < widget.words.length; i++) {
       if (colorIndex > 4) colorIndex = 0;
       Color currentColor = getColorByIndex(colorIndex);
       Widget wordTile = WordTile(
         color: currentColor,
-        word: words[i],
+        word: widget.words[i],
+        onLongPress: () {
+          setState(() {
+            widget.onLongPress(i);
+          });
+        },
       );
       rowContent.add(wordTile);
       if (rowContent.length >= 2) {
