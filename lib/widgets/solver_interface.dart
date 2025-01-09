@@ -346,8 +346,8 @@ class _SolverInterfaceState extends State<SolverInterface> {
       child: Column(
         children: [
           SizedBox(
-            width: 400,
-            height: 400,
+            width: 350,
+            height: 350,
             child: GridView.builder(
               physics: NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -379,36 +379,33 @@ class _SolverInterfaceState extends State<SolverInterface> {
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: kCreamColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      'MISSING WORDS',
-                      style: TextStyle(
-                        fontFamily: 'SourceSansPro',
-                        fontSize: 22,
-                        color: kDeepPurpleColor,
-                        letterSpacing: 5,
-                      ),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: kCreamColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    'MISSING WORDS',
+                    style: TextStyle(
+                      fontFamily: 'SourceSansPro',
+                      fontSize: 22,
+                      color: kDeepPurpleColor,
+                      letterSpacing: 5,
                     ),
-                    const SizedBox(height: 5),
-                    Divider(
-                      height: 0,
-                      thickness: 2,
-                    ),
-                    Expanded(
-                      child: WordListView(words: widget.wordList, onLongPress: removeWord),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 5),
+                  Divider(
+                    height: 0,
+                    thickness: 2,
+                  ),
+                  Expanded(
+                    child: WordListView(words: widget.wordList, onLongPress: removeWord),
+                  ),
+                ],
               ),
             ),
           )

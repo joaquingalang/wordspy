@@ -14,6 +14,7 @@ class SolverScreen extends StatefulWidget {
 }
 
 class _SolverScreenState extends State<SolverScreen> {
+
   // List<List<String>> puzzleGrid = [
   //   ['I', 'J', 'W', 'I', 'D', 'G', 'E', 'T', 'Q', 'P', 'M', 'V'],
   //   ['Y', 'D', 'Y', 'P', 'B', 'C', 'Q', 'F', 'Z', 'O', 'R', 'O'],
@@ -88,6 +89,7 @@ class _SolverScreenState extends State<SolverScreen> {
           backgroundColor: kOrangeColor,
           onPressed: () {
             showModalBottomSheet(
+              isScrollControlled: true,
               context: context,
               builder: (context) => AddWordSheet(
                 onSubmit: addNewWord,
@@ -102,6 +104,7 @@ class _SolverScreenState extends State<SolverScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      resizeToAvoidBottomInset: false,
     );
   }
 }
