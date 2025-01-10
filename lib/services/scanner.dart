@@ -1,9 +1,11 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image/image.dart' as img;
 
 class Scanner {
   final ImagePicker _imagePicker = ImagePicker();
@@ -15,6 +17,7 @@ class Scanner {
     if (pickedFile != null) {
       String? croppedImagePath = await _cropImage(pickedFile.path);
       if (croppedImagePath != null) {
+        _preprocessImage(croppedImagePath);
         List<String> body = await _translateImage(croppedImagePath);
         return body;
       }
@@ -28,6 +31,18 @@ class Scanner {
       return croppedFile.path;
     }
     return null;
+  }
+
+  Future<String?> _preprocessImage(String imagePath) async {
+    File imageFile = File(imagePath);
+    var imageBytes = await imageFile.readAsBytes();
+    img.Image? image = img.decodeImage(imageBytes);
+    if (image != null) {
+      img.Image grayScaleImage = img.grayscale(image);
+      final String processedImagePath = imagePath.replaceAll('.jpg', '_processed.jpg');
+      await File(processedImagePath).writeAsBytes(img.encodeJpg(grayScaleImage));
+    }
+    return '';
   }
 
   Future<List<String>> _translateImage(String imagePath) async {
@@ -49,5 +64,7 @@ class Scanner {
     textRecognizer.close();
     return body;
   }
+
+
 
 }

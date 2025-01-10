@@ -41,7 +41,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SolverScreen(puzzleGrid: puzzleGrid, wordList: wordList),
+      // home: SolverScreen(puzzleGrid: puzzleGrid, wordList: wordList),
+      home: HomeScreen(),
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: kCreamColor,
         appBarTheme: AppBarTheme(

@@ -1,9 +1,11 @@
 import 'dart:math';
-import 'package:string_validator/string_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:wordspy/screens/solver_screen.dart';
 import 'package:wordspy/utils/constants.dart';
+import 'package:wordspy/screens/solver_screen.dart';
 import 'package:wordspy/services/scanner.dart';
+import 'package:wordspy/widgets/step_icon.dart';
+import 'package:wordspy/widgets/scan_mode_dialog.dart';
+import 'package:string_validator/string_validator.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final Scanner _puzzleScanner = Scanner();
+  ScanMode scanMode = ScanMode.none;
 
   // List<List<String>> puzzleGrid = [
   //   ['I', 'J', 'W', 'I', 'D', 'G', 'E', 'T', 'Q', 'P', 'M', 'V'],
@@ -107,61 +110,81 @@ class _HomeScreenState extends State<HomeScreen> {
     return puzzleGrid;
   }
 
-  // VER 2
-  // List<List<String>> buildPuzzleGrid(List<String> body) {
-  //   int gridDimensions = sqrt(body[0].replaceAll(' ', '').length).round();
-  //   List<List<String>> puzzleGrid = [];
-  //   for (String line in body) {
-  //     line = line.replaceAll(' ', '');
-  //     if (line.length < gridDimensions) continue;
-  //     List<String> row = [];
-  //     for (int i = 0; i < line.length; i++) {
-  //       String letter = line[i];
-  //       if (isAlpha(letter)) {
-  //         row.add(letter.toUpperCase());
-  //       } else if (letter == '0') {
-  //         row.add('O');
-  //       }
-  //     }
-  //     print(row);
-  //     puzzleGrid.add(row);
-  //   }
-  //   return puzzleGrid;
-  // }
+  Future<void> scanImage(ImageSource imageSource) async {
+    List<String>? body = await _puzzleScanner.pickImage(imageSource);
+    print(body);
+    List<String> puzzleLetters = getPuzzleLetters(body!);
+    List<List<String>> puzzleGrid = buildPuzzleGrid(puzzleLetters);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SolverScreen(
+          puzzleGrid: puzzleGrid,
+          wordList: [],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'WORDSPY',
-          style: TextStyle(
-            fontFamily: 'Axis',
-            fontSize: 38,
-            color: kDeepPurpleColor,
-          ),
-        ),
-      ),
       body: SafeArea(
-        child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Image.asset('images/logo.png', width: 200),
               Text(
-                'Scan A Word\nSearch Puzzle',
+                'WELCOME TO',
                 style: TextStyle(
-                  fontFamily: 'Axis',
-                  fontSize: 32,
-                  color: Colors.black12,
+                  fontFamily: 'SourceSansPro',
+                  fontSize: 20,
+                  letterSpacing: 5,
                 ),
+              ),
+              Text(
+                'WORDSPY',
+                style: kXXLargeTextStyle,
                 textAlign: TextAlign.center,
               ),
-              Icon(
-                Icons.arrow_downward,
-                color: Colors.black12,
-                size: 70,
+              const SizedBox(height: 10),
+              Text(
+                'A handy tool for solving word search puzzles in a flash! It\'s simple, just follow these steps:',
+                style: TextStyle(
+                  color: kPurpleColor,
+                  fontFamily: 'SourceSansPro',
+                  fontSize: 18,
+                  letterSpacing: 1,
+                ),
+                textAlign: TextAlign.justify,
               ),
+              const SizedBox(height: 10),
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    StepIcon(
+                      text: 'Scan a Photo',
+                      iconData: Icons.add_photo_alternate_outlined,
+                      color: kTealColor,
+                    ),
+                    VerticalDivider(color: kDarkCreamColor, thickness: 3),
+                    StepIcon(
+                      text: 'Add Words',
+                      iconData: Icons.add_comment_rounded,
+                      color: kYellowColor,
+                    ),
+                    VerticalDivider(color: kDarkCreamColor, thickness: 3),
+                    StepIcon(
+                      text: 'View Results',
+                      iconData: Icons.remove_red_eye_outlined,
+                      color: kOrangeColor,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 100),
             ],
           ),
         ),
@@ -175,18 +198,19 @@ class _HomeScreenState extends State<HomeScreen> {
           shape: CircleBorder(),
           backgroundColor: kOrangeColor,
           onPressed: () async {
-            List<String>? body =
-                await _puzzleScanner.pickImage(ImageSource.camera);
-            print(body);
-            List<String> puzzleLetters = getPuzzleLetters(body!);
-            List<List<String>> puzzleGrid = buildPuzzleGrid(puzzleLetters);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SolverScreen(
-                  puzzleGrid: puzzleGrid,
-                  wordList: [],
-                ),
+            setState(() {
+              scanMode = ScanMode.none;
+            });
+
+            showDialog(
+              context: context,
+              builder: (context) => ScanModeDialog(
+                onCamera: () async {
+                  await scanImage(ImageSource.camera);
+                },
+                onGallery: () {
+                  scanImage(ImageSource.gallery);
+                },
               ),
             );
           },

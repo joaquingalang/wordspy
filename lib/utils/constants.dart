@@ -12,6 +12,12 @@ enum Direction {
   bottomRight,
 }
 
+enum ScanMode {
+  camera,
+  gallery,
+  none
+}
+
 // Color
 const Color kCreamColor = Color(0xFFFFFDF9);
 const Color kDarkCreamColor = Color(0xFFE8E6E1);
@@ -25,16 +31,40 @@ const Color kYellowColor = Color(0xFFedde5c);
 const Color kRedColor = Color(0xFFDE6D78);
 
 // Text Style
-const TextStyle kMediumTextStyle = TextStyle(
+const TextStyle kXXLargeTextStyle = TextStyle(
   fontFamily: 'Axis',
   color: kDeepPurpleColor,
-  fontSize: 20,
+  fontSize: 38,
+);
+
+const TextStyle kXLargeTextStyle = TextStyle(
+  fontFamily: 'Axis',
+  color: kDeepPurpleColor,
+  fontSize: 34,
 );
 
 const TextStyle kLargeTextStyle = TextStyle(
   fontFamily: 'Axis',
   color: kDeepPurpleColor,
   fontSize: 28,
+);
+
+const TextStyle kMediumTextStyle = TextStyle(
+  fontFamily: 'Axis',
+  color: kDeepPurpleColor,
+  fontSize: 20,
+);
+
+const TextStyle kSmallTextStyle = TextStyle(
+  fontFamily: 'Axis',
+  color: kDarkCreamColor,
+  fontSize: 16,
+);
+
+const TextStyle kXSmallTextStyle = TextStyle(
+  fontFamily: 'Axis',
+  color: Colors.black54,
+  fontSize: 10,
 );
 
 const TextStyle kWhiteMediumTextStyle = TextStyle(
